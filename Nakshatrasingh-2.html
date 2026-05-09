@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Student Registration Form</title>
+  <style>
+    body { background-color: orange; font-family: Arial, sans-serif; text-align: center; }
+    h1 { text-decoration: underline; }
+    input[type="text"], input[type="number"], input[type="email"],
+    input[type="password"], input[type="date"] { margin: 5px; padding: 4px; }
+    input[type="submit"] { margin-top: 10px; padding: 8px 20px; cursor: pointer; font-size: 15px; }
+    #message { font-weight: bold; margin-top: 10px; }
+  </style>
+</head>
+<body>
+<center><u><h1>Student Registration Form</h1></u></center>
+<form id="regForm">
+  <center><p>
+    First Name: <input type="text" id="firstName" required><br><br>
+    Last Name: <input type="text" id="lastName" required><br><br>
+    Father Name: <input type="text" id="fatherName" required><br><br>
+    Phone Number: <input type="number" id="phone" required><br><br>
+    Gender: Male <input type="radio" name="gender" value="Male"> Female <input type="radio" name="gender" value="Female"><br><br>
+    Department:
+    CSE <input type="radio" name="department" value="CSE">
+    IT <input type="radio" name="department" value="IT">
+    ECE <input type="radio" name="department" value="ECE">
+    Civil <input type="radio" name="department" value="Civ Civil">
+    Mech <input type="radio" name="department" value="Mech"><br><br>
+    Email: <input type="email" id="email" required><br><br>
+    D.O.B: <input type="date" id="dob" required><br><br>
+    Password: <input type="password" id="password" required><br><br>
+    <input type="submit" value="Submit">
+  </p></center>
+</form>
+<div id="message"></div>
+<script>
+  var scriptURL = "https://script.google.com/macros/s/AKfycbwaahvqgFXuqe21Z2gioy6KAwqI4aUCvQ2B1C8rJKRjh4gLbWVPrlqtfKY-FiyAgqBzDA/exec";
+
+  document.getElementById("regForm").addEventListener("submit", function(e) {
+    e.preventDefault();
+
+    var gender = "";
+    var genderOptions = document.getElementsByName("gender");
+    for (var i = 0; i < genderOptions.length; i++) {
+      if (genderOptions[i].checked) gender = genderOptions[i].value;
+    }
+
+    var department = "";
+    var deptOptions = document.getElementsByName("department");
+    for (var i = 0; i < deptOptions.length; i++) {
+      if (deptOptions[i].checked) department = deptOptions[i].value;
+    }
+
+    document.getElementById("message").innerText = "⏳ Sending data to Google Sheets...";
+    document.getElementById("message").style.color = "blue";
+
+    var url = scriptURL +
+      "?firstName="  + encodeURIComponent(document.getElementById("firstName").value) +
+      "&lastName="   + encodeURIComponent(document.getElementById("lastName").value) +
+      "&fatherName=" + encodeURIComponent(document.getElementById("fatherName").value) +
+      "&phone="      + encodeURIComponent(document.getElementById("phone").value) +
+      "&gender="     + encodeURIComponent(gender) +
+      "&department=" + encodeURIComponent(department) +
+      "&email="      + encodeURIComponent(document.getElementById("email").value) +
+      "&dob="        + encodeURIComponent(document.getElementById("dob").value) +
+      "&password="   + encodeURIComponent(document.getElementById("password").value);
+
+    fetch(url, { method: "GET", mode: "no-cors" })
+      .then(function() {
+        document.getElementById("message").innerText = "✅ Data saved to Google Sheets successfully!";
+        document.getElementById("message").style.color = "darkgreen";
+      })
+      .catch(function() {
+        document.getElementById("message").innerText = "❌ Error! Check your internet connection.";
+        document.getElementById("message").style.color = "red";
+      });
+
+    document.getElementById("regForm").reset();
+  });
+</script>
+</body>
+</html>
